@@ -11,24 +11,26 @@ import chess.pieces.Rook;
 
 public class ChessMatch {
 
-	private Board board;
 	private int turn;
 	private Color currentPlayer;
+	private Board board;
+	
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
+	
+	public ChessMatch() {
+		board = new Board(8, 8);
+		turn = 1;
+		currentPlayer = Color.WHITE;
+		initialSetup();
+	}
 	
 	public int getTurn() {
 		return turn;
 	}
+	
 	public Color getCurrentPlayer() {
 		return currentPlayer;
-	}
-	
-	public ChessMatch() {
-		board = new Board(8, 8);
-		turn  = 1;
-		currentPlayer = Color.WHITE;
-		initialSetup();
 	}
 	
 	public ChessPiece[][] getPieces() {
@@ -44,7 +46,7 @@ public class ChessMatch {
 	public boolean[][] possibleMoves(ChessPosition sourcePosition) {
 		Position position = sourcePosition.toPosition();
 		validateSourcePosition(position);
-		return board.piece(position).possibleMoves();				
+		return board.piece(position).possibleMoves();
 	}
 	
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
@@ -60,11 +62,13 @@ public class ChessMatch {
 	private Piece makeMove(Position source, Position target) {
 		Piece p = board.removePiece(source);
 		Piece capturedPiece = board.removePiece(target);
+		board.placePiece(p, target);
+		
 		if (capturedPiece != null) {
 			piecesOnTheBoard.remove(capturedPiece);
 			capturedPieces.add(capturedPiece);
 		}
-		board.placePiece(p, target);
+		
 		return capturedPiece;
 	}
 	
@@ -87,13 +91,8 @@ public class ChessMatch {
 	}
 	
 	private void nextTurn() {
-		turn ++;
-		if (currentPlayer == Color.WHITE) {
-			currentPlayer = Color.BLACK;
-		}
-		else if (currentPlayer == Color.BLACK) {
-			currentPlayer = Color.WHITE;
-		}
+		turn++;
+		currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
 	}
 	
 	private void placeNewPiece(char column, int row, ChessPiece piece) {

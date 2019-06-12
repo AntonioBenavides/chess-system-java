@@ -176,7 +176,7 @@ public class ChessMatch {
 						Piece capturedPiece = makeMove(source, target);
 						boolean testCheck = testCheck(color);
 						undoMove(source, target, capturedPiece);
-						if (testCheck) {
+						if (!testCheck) {
 							return false;
 						}
 					}
